@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Customer, Category, Product
-from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, LoginSerializer
+from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer
 
 
 # Create your views here.
@@ -73,7 +73,7 @@ class LoginView(APIView):
         if user is not None:
             serializer = CustomerSerializer(user)
             if password != serializer.data['password']:
-                return Response({"response": "Incorrect password"},status=status.HTTP_200_OK)
+                return Response({"response": "Incorrect password"}, status=status.HTTP_200_OK)
             else:
                 return Response({"response": "login successful"}, status=status.HTTP_400_BAD_REQUEST)
         else:

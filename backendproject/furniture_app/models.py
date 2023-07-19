@@ -36,9 +36,4 @@ class Product(models.Model):
         return self.prod_name + " " + self.description + " " + self.condition + " " + self.days_to_deliver + " " + self.category + " " + self.color + " " + self.size + " " + self.image_url + " " + self.rate
 
 
-class Login(models.Model):
-    user_name = models.CharField(max_length=200)
-    password = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.user_name + " " + self.password
