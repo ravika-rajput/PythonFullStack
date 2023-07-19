@@ -38,3 +38,12 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('__all__')
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(max_length=200)
+    password = serializers.CharField(max_length=20)
+
+    class Meta:
+        model = Product
+        fields = ('__all__')

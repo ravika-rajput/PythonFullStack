@@ -1,9 +1,14 @@
-from django.shortcuts import render
+from urllib import request
+
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+from django.core.checks import messages
+from django.shortcuts import render, redirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Customer, Category, Product
-from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer
+from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, LoginSerializer
 
 
 # Create your views here.
@@ -55,5 +60,26 @@ class ProductView(APIView):
             return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+class LoginView(APIView):
+
+    def post(self, request):
+        user_name = request.data["user_name"]
+        password = request.data["password"]
+        try:
+            user = Customer.objects.get(user_name=user_name)
+        except Customer.DoesNotExist:
+            user = None
+        if user is not None:
+            serializer = CustomerSerializer(user)
+            if password != serializer.data['password']:
+                return Response({"response": "Incorrect password"},status=status.HTTP_200_OK)
+            else:
+                return Response({"response": "login successful"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"response":"user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
