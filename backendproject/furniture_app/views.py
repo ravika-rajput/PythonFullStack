@@ -73,9 +73,9 @@ class LoginView(APIView):
         if user is not None:
             serializer = CustomerSerializer(user)
             if password != serializer.data['password']:
-                return Response({"response": "Incorrect password"}, status=status.HTTP_200_OK)
+                return Response({"response": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response({"response": "login successful"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"response": "login successful"}, status=status.HTTP_200_OK)
         else:
             return Response({"response":"user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
