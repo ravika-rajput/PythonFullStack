@@ -30,7 +30,8 @@ class Product(models.Model):
     color = models.CharField(max_length=100)
     size = models.CharField(max_length=100)
     image_url = models.CharField(max_length=500)
-    rate = models.FloatField()
+    #rate = models.FloatField()
+    rate = models.JSONField()
 
     def __str__(self):
         return self.prod_name + " " + self.description + " " + self.condition + " " + self.days_to_deliver + " " + self.category + " " + self.color + " " + self.size + " " + self.image_url + " " + self.rate

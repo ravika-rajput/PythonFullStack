@@ -33,7 +33,7 @@ class ProductSerializer(serializers.ModelSerializer):
     color = serializers.CharField(max_length=100)
     size = serializers.CharField(max_length=100)
     image_url = serializers.CharField(max_length=500)
-    rate = serializers.FloatField()
+    rate = serializers.JSONField()
 
     class Meta:
         model = Product
