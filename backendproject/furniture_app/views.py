@@ -55,10 +55,10 @@ Class CategoryView: To manage product category information
 
 
 class CategoryView(APIView):
-    def get(self, request):
-        results = Category.objects.all()
-        serializer = CategorySerializer(results, many=True)
-        return Response({'status': 'success', 'customers': serializer.data})
+    # def get(self, request):
+    #     results = Category.objects.all()
+    #     serializer = CategorySerializer(results, many=True)
+    #     return Response({'status': 'success', 'customers': serializer.data})
 
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
@@ -67,6 +67,13 @@ class CategoryView(APIView):
             return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+class CategoriesView(APIView):
+
+    def get(self, request):
+        results = Category.objects.all()
+        serializer = CategorySerializer(results, many=True)
+        return Response({'status': 'success', 'customers': serializer.data})
 
 
 class ProductView(APIView):
