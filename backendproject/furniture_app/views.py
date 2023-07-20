@@ -10,30 +10,48 @@ from rest_framework.views import APIView
 from .models import Customer, Category, Product
 from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer
 
+"""
+CustomerView: To manage customer information
+:param request: url body
+:param args and kwargs: system variables to pass along url
+:return : HTTP response
+"""
+
 
 # Create your views here.
 class CustomerView(APIView):
-    def get(self, request, *args, **kwargs):
-        user_name = kwargs.get('user_name')
-        print(user_name)
-        if user_name:
-            results = Customer.objects.get(user_name=user_name)
-            serializer = CustomerSerializer(results)
-            return Response({'status': 'success', 'customers': serializer.data}, status=status.HTTP_200_OK)
-
-        else:
-            results = Customer.objects.all()
-            serializer = CustomerSerializer(results, many=True)
-            return Response({'status': 'success', 'customers': serializer.data})
+    # def get(self, request, *args, **kwargs):
+    #     user_name = kwargs.get('user_name')
+    #     print(user_name)
+    #     if user_name:
+    #         results = Customer.objects.get(user_name=user_name)
+    #         serializer = CustomerSerializer(results)
+    #         return Response({'status': 'success', 'customers': serializer.data}, status=status.HTTP_200_OK)
+    #
+    #     else:
+    #         results = Customer.objects.all()
+    #         serializer = CustomerSerializer(results, many=True)
+    #         return Response({'status': 'success', 'customers': serializer.data})
 
     def post(self, request):
-        serializer = CustomerSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+        serializer = CustomerSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            if Customer.objects.filter(user_name=serializer.validated_data.get('user_name')).exists():
+                return Response({'status': 'error - user already exists'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save()
+                return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+
+"""
+Class CategoryView: To manage product category information
+:param request: url body
+:return : HTTP response
+
+"""
 
 
 class CategoryView(APIView):
@@ -61,6 +79,7 @@ class ProductView(APIView):
         else:
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class LoginView(APIView):
 
     def post(self, request):
@@ -77,9 +96,4 @@ class LoginView(APIView):
             else:
                 return Response({"response": "login successful"}, status=status.HTTP_200_OK)
         else:
-            return Response({"response":"user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
+            return Response({"response": "user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
