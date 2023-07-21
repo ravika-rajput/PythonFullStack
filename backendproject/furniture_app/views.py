@@ -75,9 +75,14 @@ class CategoriesView(APIView):
         serializer = CategorySerializer(results, many=True)
         return Response({'status': 'success', 'customers': serializer.data})
 
+class ProductByCategoryView(APIView):
+    def get(self, request,*args,**kwargs):
+        category = kwargs.get('category')
+        results = Product.objects.filter(category=category)
+        serializer = ProductSerializer(results, many=True)
+        return Response({'category':category,'product': serializer.data},status=status.HTTP_200_OK)
 
 class ProductView(APIView):
-
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
