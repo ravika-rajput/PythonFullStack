@@ -33,14 +33,6 @@ class CustomerView(APIView):
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
 
 
-"""
-Class CategoryView: To manage product category information
-:param request: url body
-:return : HTTP response
-
-"""
-
-
 class CategoryView(APIView):
 
     def post(self, request):
