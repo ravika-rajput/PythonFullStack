@@ -20,19 +20,6 @@ CustomerView: To manage customer information
 
 # Create your views here.
 class CustomerView(APIView):
-    # def get(self, request, *args, **kwargs):
-    #     user_name = kwargs.get('user_name')
-    #     print(user_name)
-    #     if user_name:
-    #         results = Customer.objects.get(user_name=user_name)
-    #         serializer = CustomerSerializer(results)
-    #         return Response({'status': 'success', 'customers': serializer.data}, status=status.HTTP_200_OK)
-    #
-    #     else:
-    #         results = Customer.objects.all()
-    #         serializer = CustomerSerializer(results, many=True)
-    #         return Response({'status': 'success', 'customers': serializer.data})
-
     def post(self, request):
 
         serializer = CustomerSerializer(data=request.data)
@@ -55,10 +42,6 @@ Class CategoryView: To manage product category information
 
 
 class CategoryView(APIView):
-    # def get(self, request):
-    #     results = Category.objects.all()
-    #     serializer = CategorySerializer(results, many=True)
-    #     return Response({'status': 'success', 'customers': serializer.data})
 
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
