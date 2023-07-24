@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Customer, Category, Product
+from .models import Customer, Category, Product, Invoice
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -37,6 +37,16 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
+        fields = ('__all__')
+
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    prod_name = serializers.JSONField(required=True)
+    first_name = serializers.CharField(max_length=200, required=True)
+    last_name = serializers.CharField(max_length=200, required=True)
+
+    class Meta:
+        model = Invoice
         fields = ('__all__')
 
 
