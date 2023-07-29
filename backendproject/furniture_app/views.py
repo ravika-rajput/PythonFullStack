@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Customer, Category, Product
 from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, InvoiceSerializer
+from django.contrib.auth.decorators import login_required
 
 """
 CustomerView: To manage customer information
@@ -57,14 +58,18 @@ class ProductByCategoryView(APIView):
         serializer = ProductSerializer(results, many=True)
         return Response({'category':category,'product': serializer.data},status=status.HTTP_200_OK)
 
+
 class ProductView(APIView):
-    def post(self, request):
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
-        else:
-            return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+     def post(self, request):
+            serializer = ProductSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class LoginView(APIView):

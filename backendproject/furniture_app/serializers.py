@@ -44,7 +44,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     prod_name = serializers.JSONField(required=True)
     first_name = serializers.CharField(max_length=200, required=True)
     last_name = serializers.CharField(max_length=200, required=True)
-
+    user_name = serializers.CharField(max_length=200, required=True)
     class Meta:
         model = Invoice
         fields = ('__all__')

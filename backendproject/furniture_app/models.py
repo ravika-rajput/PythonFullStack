@@ -39,4 +39,5 @@ class Invoice(models.Model):
     prod_name = models.JSONField()
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
+    user_name = models.CharField(max_length=200)
 
