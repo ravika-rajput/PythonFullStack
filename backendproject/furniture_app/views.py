@@ -38,9 +38,12 @@ class CategoryView(APIView):
 
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+        if serializer.is_valid(raise_exception=True):
+            if Category.objects.filter(type=serializer.validated_data.get('type')).exists():
+                return Response({'status': 'error - category already exists'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save()
+                return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
 
