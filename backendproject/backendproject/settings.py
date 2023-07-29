@@ -87,7 +87,7 @@ DATABASES =
 DATABASES = {
     "default": {
         "ENGINE": "djongo",
-        "NAME": 'furniture_app',
+        "NAME": 'backend_furniture_app',
         'HOST': '127.0.0.1',
         'PORT': 27017,
     }

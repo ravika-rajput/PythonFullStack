@@ -35,17 +35,20 @@ class CustomerView(APIView):
 
 
 class CategoryView(APIView):
-
     def post(self, request):
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            if Category.objects.filter(type=serializer.validated_data.get('type')).exists():
-                return Response({'status': 'error - category already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_superuser:
+            serializer = CategorySerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                if Category.objects.filter(type=serializer.validated_data.get('type')).exists():
+                    return Response({'status': 'error - category already exists'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    serializer.save()
+                    return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
             else:
-                serializer.save()
-                return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
+                return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
         else:
-            return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'status': 'un authorize action!!!'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CategoriesView(APIView):
 
@@ -54,25 +57,28 @@ class CategoriesView(APIView):
         serializer = CategorySerializer(results, many=True)
         return Response({'status': 'success', 'customers': serializer.data})
 
+
 class ProductByCategoryView(APIView):
-    def get(self, request,*args,**kwargs):
+    def get(self, request, *args, **kwargs):
         category = kwargs.get('category')
         results = Product.objects.filter(category=category)
         serializer = ProductSerializer(results, many=True)
-        return Response({'category':category,'product': serializer.data},status=status.HTTP_200_OK)
+        return Response({'category': category, 'product': serializer.data}, status=status.HTTP_200_OK)
 
 
 class ProductView(APIView):
 
-     def post(self, request):
+    def post(self, request):
+        if request.user.is_superuser:
             serializer = ProductSerializer(data=request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
-
-
+        else:
+            return Response({'status': 'not permitted! only admin is permitted to register new product'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -92,6 +98,7 @@ class LoginView(APIView):
                 return Response({"response": "login successful"}, status=status.HTTP_200_OK)
         else:
             return Response({"response": "user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class InvoiceView(APIView):
     def post(self, request):
