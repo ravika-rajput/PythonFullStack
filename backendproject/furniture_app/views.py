@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Customer, Category, Product
+from .models import Customer, Category, Product, Invoice
 from .serializers import CustomerSerializer, CategorySerializer, ProductSerializer, InvoiceSerializer
 from django.contrib.auth.decorators import login_required
 
@@ -103,8 +103,16 @@ class LoginView(APIView):
 class InvoiceView(APIView):
     def post(self, request):
         serializer = InvoiceSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response({'status': 'success', 'data': serializer.data}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+class InvoiceViewUsername(APIView):
+    def get(self, request, *args, **kwargs):
+        user_name = kwargs.get('user_name')
+        print(user_name)
+        results = Invoice.objects.filter(user_name=user_name)
+        serializer = InvoiceSerializer(results, many=True)
+        return Response({'user_name': user_name, 'invoice': serializer.data}, status=status.HTTP_200_OK)
