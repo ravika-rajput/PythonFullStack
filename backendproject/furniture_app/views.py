@@ -21,6 +21,12 @@ CustomerView: To manage customer information
 
 # Create your views here.
 class CustomerView(APIView):
+    '''
+    Customer management
+    post: register customer
+    param: request {data}
+    return: HTTP response
+    '''
     def post(self, request):
 
         serializer = CustomerSerializer(data=request.data)
@@ -35,6 +41,12 @@ class CustomerView(APIView):
 
 
 class CategoryView(APIView):
+    '''
+    Category management
+    post: register category (only admin)
+    param: request {data}
+    return: HTTP response
+    '''
     def post(self, request):
         if request.user.is_superuser:
             serializer = CategorySerializer(data=request.data)
@@ -51,7 +63,12 @@ class CategoryView(APIView):
             return Response({'status': 'un authorize action!!!'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CategoriesView(APIView):
-
+    '''
+    Category management
+    get: list of categories
+    param: request {data}
+    return: HTTP response
+    '''
     def get(self, request):
         results = Category.objects.all()
         serializer = CategorySerializer(results, many=True)
@@ -59,6 +76,14 @@ class CategoriesView(APIView):
 
 
 class ProductByCategoryView(APIView):
+    '''
+    Product management
+    get: products by categories
+    param: request {data}
+    param: product category
+    return: HTTP response
+    '''
+
     def get(self, request, *args, **kwargs):
         category = kwargs.get('category')
         results = Product.objects.filter(category=category)
@@ -67,7 +92,12 @@ class ProductByCategoryView(APIView):
 
 
 class ProductView(APIView):
-
+    '''
+    Product management
+    post: register new product admin only
+    param: request {data}
+    return: HTTP response
+    '''
     def post(self, request):
         if request.user.is_superuser:
             serializer = ProductSerializer(data=request.data)
@@ -82,6 +112,12 @@ class ProductView(APIView):
 
 
 class LoginView(APIView):
+    '''
+    Customer management
+    post: customer login
+    param: request {data}
+    return: HTTP response
+    '''
 
     def post(self, request):
         user_name = request.data["user_name"]
@@ -101,6 +137,12 @@ class LoginView(APIView):
 
 
 class InvoiceView(APIView):
+    '''
+    Invoice management
+    post:  invoice creation
+    param: request {data}
+    return: HTTP response
+    '''
     def post(self, request):
         serializer = InvoiceSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -110,9 +152,15 @@ class InvoiceView(APIView):
             return Response({'status': 'error', 'data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
 
 class InvoiceViewUsername(APIView):
+    '''
+    Invoice management
+    get: invoice by user name
+    param: request {data}
+    param: user name
+    return: HTTP response
+    '''
     def get(self, request, *args, **kwargs):
         user_name = kwargs.get('user_name')
-        print(user_name)
         results = Invoice.objects.filter(user_name=user_name)
         serializer = InvoiceSerializer(results, many=True)
         return Response({'user_name': user_name, 'invoice': serializer.data}, status=status.HTTP_200_OK)
